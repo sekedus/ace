@@ -176,7 +176,7 @@ class Search {
             input = input.replace(/\r\n|\r|\n/g, "\n");
 
         var match = re.exec(input);
-        if (!match || match[0].length != input.length)
+        if (!match || (!this.$isMultilineSearch(options) && match[0].length != input.length))
             return null;
         if (!options.regExp) {
             replacement = replacement.replace(/\$/g, "$$$$");

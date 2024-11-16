@@ -214,7 +214,7 @@ class SearchBox {
                 ? editor.session.getTextRange(this.searchRange)
                 : editor.getValue();
 
-            if (editor.$search.$isMultilineSearch(editor.$search.$options))
+            if (editor.$search.$isMultilineSearch(editor.getLastSearchOptions()))
                 value = value.replace(/\r\n|\r|\n/g, "\n");
 
             var offset = editor.session.doc.positionToIndex(editor.selection.anchor);
@@ -260,17 +260,24 @@ class SearchBox {
     }
     replace() {
         if (!this.editor.getReadOnly())
-            this.editor.replace(this.replaceInput.value);
+            this.editor.replace(this.replaceMultiline(this.replaceInput.value));
     }
     replaceAndFindNext() {
         if (!this.editor.getReadOnly()) {
-            this.editor.replace(this.replaceInput.value);
+            this.editor.replace(this.replaceMultiline(this.replaceInput.value));
             this.findNext();
         }
     }
     replaceAll() {
         if (!this.editor.getReadOnly())
-            this.editor.replaceAll(this.replaceInput.value);
+            this.editor.replaceAll(this.replaceMultiline(this.replaceInput.value));
+    }
+    replaceMultiline(text) {
+        if (this.editor.$search.$isMultilineSearch(this.editor.getLastSearchOptions())) {
+            return text.replace(/\\n/g, '\n');
+        } else {
+            return text;
+        }
     }
 
     hide() {
